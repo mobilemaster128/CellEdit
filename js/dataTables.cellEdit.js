@@ -23,6 +23,7 @@
 
 jQuery.fn.dataTable.Api.register('MakeCellsEditable()', function (settings) {
     var table = this.table();
+    var oldCell = null;
 
     jQuery.fn.extend({
         // UPDATE
@@ -64,6 +65,8 @@ jQuery.fn.dataTable.Api.register('MakeCellsEditable()', function (settings) {
             function _update(newValue) {
                 var oldValue = cell.data();
                 cell.data(newValue);
+                // reset oldCell
+                oldCell = null;
                 //Return cell & row.
                 settings.onUpdate(cell, row, oldValue);
             }
@@ -79,6 +82,8 @@ jQuery.fn.dataTable.Api.register('MakeCellsEditable()', function (settings) {
             var cell = table.cell($(callingElement).parent());
             // Set cell to it's original value
             cell.data(cell.data());
+            // reset oldCell
+            oldCell = null;
 
             // Redraw table
             table.draw();
@@ -94,7 +99,6 @@ jQuery.fn.dataTable.Api.register('MakeCellsEditable()', function (settings) {
     if (table != null) {
         // On cell click
         $(table.body()).on('click', 'td', function () {
-
             var currentColumnIndex = table.cell(this).index().column;
 
             // DETERMINE WHAT COLUMNS CAN BE EDITED
@@ -109,6 +113,14 @@ jQuery.fn.dataTable.Api.register('MakeCellsEditable()', function (settings) {
 
                 // Show input
                 if (!$(cell).find('input').length && !$(cell).find('select').length && !$(cell).find('textarea').length) {
+                    // remove oldCell and update oldCell value
+                    if (oldCell) {
+                        // Set cell to it's original value
+                        oldCell.data(oldCell.data());
+                        // Redraw table
+                        table.draw();
+                    }
+                    oldCell = table.cell(this);
                     // Input CSS
                     var input = getInputHtml(currentColumnIndex, settings, oldValue);
                     $(cell).html(input.html);
