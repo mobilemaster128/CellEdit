@@ -114,7 +114,7 @@ jQuery.fn.dataTable.Api.register('MakeCellsEditable()', function (settings) {
                 // Show input
                 if (!$(cell).find('input').length && !$(cell).find('select').length && !$(cell).find('textarea').length) {
                     // remove oldCell and update oldCell value
-                    if (oldCell) {
+                    if (settings.onlyOneCell && oldCell) {
                         // Set cell to it's original value
                         oldCell.data(oldCell.data());
                         // Redraw table

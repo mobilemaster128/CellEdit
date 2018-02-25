@@ -43,6 +43,7 @@ Property | Type | Default | Example | Details
         "onUpdate": myCallbackFunction,
         "inputCss":'my-input-class',
         "columns": [0,1,2],
+        "onlyOneCell": true,
         "allowNulls": {
             "columns": [1],
             "errorClass": 'error'
